@@ -1,10 +1,14 @@
 package main
 
-import "log"
+import (
+	"context"
+	"log"
+)
 
 func main() {
 	log.Printf("Start Ports Service\n")
-	err := ParsePortsFile("ports.json")
+	ctx := context.Background()
+	err := ParsePortsFile(ctx, "ports.json")
 	if err != nil {
 		log.Printf("Failed to parse ports file: %s\n", err)
 		return

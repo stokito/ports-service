@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -8,7 +9,7 @@ import (
 	"os"
 )
 
-func ParsePortsFile(portsFilePath string) error {
+func ParsePortsFile(ctx context.Context, portsFilePath string) error {
 	portsFile, err := os.Open(portsFilePath)
 	if err != nil {
 		return err
@@ -20,9 +21,13 @@ func ParsePortsFile(portsFilePath string) error {
 	// Communication
 	res := make(chan ParseStream, 1024)
 
-	go ParsePortsStream(portsFile, res)
+	go ParsePortsStream(ctx, portsFile, res)
 	// Read from results stream...
 	for got := range res {
+		select {
+		case <-ctx.Done():
+			break
+		}
 		if got.Error != nil {
 			if got.Error == io.EOF {
 				break
@@ -47,7 +52,7 @@ type ParseStream struct {
 	Error error
 }
 
-func ParsePortsStream(portsFile io.Reader, res chan<- ParseStream) {
+func ParsePortsStream(ctx context.Context, portsFile io.Reader, res chan<- ParseStream) {
 	defer close(res)
 	port := &Port{
 		Unlocs: []string{"1"},
