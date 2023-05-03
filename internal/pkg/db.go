@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"context"
@@ -18,17 +18,17 @@ type PortsDb interface {
 	RemoveAll()
 }
 
-var portsDb PortsDb
+var PortsDbConn PortsDb
 
-func InitDb() error {
-	if conf.DatabaseUrl == "" {
+func InitDb(dbUrl string) error {
+	if dbUrl == "" {
 		return errors.New("database is not configured")
 	}
-	if strings.HasPrefix(conf.DatabaseUrl, "mem://") {
-		portsDb = NewInmemoryDb()
+	if strings.HasPrefix(dbUrl, "mem://") {
+		PortsDbConn = NewInmemoryDb()
 		return nil
-	} else if strings.HasPrefix(conf.DatabaseUrl, "postgres://") {
-		portsDb = NewPostgresDb(conf.DatabaseUrl)
+	} else if strings.HasPrefix(dbUrl, "postgres://") {
+		PortsDbConn = NewPostgresDb(dbUrl)
 		return nil
 	}
 	return errors.New("database is not supported")

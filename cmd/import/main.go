@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	. "github.com/stokito/ports-service/internal/pkg"
 	"log"
 	"os"
 )
@@ -17,26 +17,26 @@ var conf *PortsServiceConf
 
 func main() {
 	loadConfig()
-	log.Printf("Start Ports Import\n")
+	log.Printf("INFO Start Ports Import\n")
 	ctx := context.Background()
-	dbInitErr := InitDb()
+	dbInitErr := InitDb(conf.DatabaseUrl)
 	if dbInitErr != nil {
 		log.Printf("CRIT Database configuration failed: %s\n", dbInitErr)
 		return
 	}
-	dbErr := portsDb.Connect(ctx)
+	dbErr := PortsDbConn.Connect(ctx)
 	if dbErr != nil {
 		log.Printf("CRIT Database connection failed: %s\n", dbErr)
 		return
 	}
-	defer portsDb.Close()
+	defer PortsDbConn.Close()
 	log.Printf("INFO Importing %s\n", conf.PortsFilePath)
 	totalProcessed, err := ParsePortsFile(ctx, conf.PortsFilePath)
 	if err != nil {
 		log.Printf("CRIT Failed to parse ports file: %s\n", err)
 		return
 	}
-	fmt.Println("Total Processed ", totalProcessed)
+	log.Printf("INFO Total Processed %d\n", totalProcessed)
 }
 
 // loadConfig Load settings from conf.json and optionally from conf.local.json (used for a local development)

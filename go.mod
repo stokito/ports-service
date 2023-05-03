@@ -1,4 +1,4 @@
-module ports-service
+module github.com/stokito/ports-service
 
 go 1.20
 

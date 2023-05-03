@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"context"
@@ -67,12 +67,12 @@ func Test_ParsePortsStream(t *testing.T) {
 
 func Test_ParsePortsFile(t *testing.T) {
 	ctx := context.Background()
-	portsDb = NewInmemoryDb()
+	PortsDbConn = NewInmemoryDb()
 	totalProcessed, err := ParsePortsFile(ctx, "ports.json")
 	assert.Nil(t, err)
-	p1 := portsDb.FindPort(ctx, "DJJIB")
+	p1 := PortsDbConn.FindPort(ctx, "DJJIB")
 	assert.Equal(t, []string{"DJJIB", "DJPOD"}, p1.Unlocs)
-	allPorts := portsDb.GetAll(ctx)
+	allPorts := PortsDbConn.GetAll(ctx)
 	assert.Equal(t, uint64(1632), totalProcessed)
 	assert.Equal(t, 1624, len(allPorts))
 }

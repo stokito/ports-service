@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"context"
@@ -41,7 +41,7 @@ processing:
 			if got.Value == nil {
 				continue
 			}
-			portsDb.UpsertPort(ctx, got.Unloc, got.Value)
+			PortsDbConn.UpsertPort(ctx, got.Unloc, got.Value)
 			totalProcessed++
 		}
 	}
