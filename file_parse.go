@@ -38,6 +38,7 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) error {
 			log.Print(got.Error)
 			continue
 		}
+		UpsertPort(ctx, got.Unlock, got.Value)
 		totalProcessed++
 	}
 	fmt.Println("Total Processed ", totalProcessed)
