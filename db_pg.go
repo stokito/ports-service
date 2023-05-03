@@ -2,12 +2,9 @@ package main
 
 import (
 	"context"
-	"errors"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 )
-
-var db *pgxpool.Pool
 
 // language=PostgreSQL
 var sqlUpsertPort = `INSERT INTO ports (
@@ -15,35 +12,56 @@ var sqlUpsertPort = `INSERT INTO ports (
 	VALUES ($1, $2)
 `
 
-func dbConnect(ctx context.Context) error {
-	if conf.DatabaseUrl == "" {
-		return errors.New("database is not configured")
-	}
-	poolConfig, err := pgxpool.ParseConfig(conf.DatabaseUrl)
+type PostgresDb struct {
+	pool        *pgxpool.Pool
+	databaseUrl string
+}
+
+func NewPostgresDb(databaseUrl string) *PostgresDb {
+	return &PostgresDb{databaseUrl: databaseUrl}
+}
+
+//Connect(ctx context.Context) error
+//Close(ctx context.Context)
+//UpsertPort(ctx context.Context, portUnlock string, port *Port) error
+//FindPort(ctx context.Context, portUnlock string) *Port
+
+func (db *PostgresDb) Connect(ctx context.Context) error {
+	poolConfig, err := pgxpool.ParseConfig(db.databaseUrl)
 	if err != nil {
 		return err
 	}
-	var dbErr error
-	db, dbErr = pgxpool.ConnectConfig(ctx, poolConfig)
+	pool, dbErr := pgxpool.ConnectConfig(ctx, poolConfig)
 	if dbErr != nil {
 		return err
 	}
+	db.pool = pool
 	log.Printf("INFO Connected to database\n")
 	return nil
 }
 
-func dbClose() {
+func (db *PostgresDb) Close() {
 	if db != nil {
-		db.Close()
-		db = nil
+		db.pool.Close()
+		db.pool = nil
 		log.Printf("INFO DB disconnected\n")
 	}
 }
 
-func UpsertPort(ctx context.Context, unlock string, port *Port) {
-	_, sqlErr := db.Exec(ctx, sqlUpsertPort,
-		unlock, port)
+func (db *PostgresDb) UpsertPort(ctx context.Context, portUnlock string, port *Port) {
+	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,
+		portUnlock, port)
 	if sqlErr != nil {
 		log.Printf("WARN Fail to upsert port %v\n", sqlErr)
 	}
+}
+
+func (db *PostgresDb) FindPort(ctx context.Context, portUnlock string) *Port {
+	//TODO
+	return nil
+}
+
+func (db *PostgresDb) GetAll(ctx context.Context) []*Port {
+	//TODO
+	return nil
 }
