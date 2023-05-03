@@ -1,4 +1,4 @@
 {
-  "DatabaseUrl": "postgres://postgres:postgres@127.0.0.1:5432/portsdb?search_path=ports_schema",
+  "DatabaseUrl": "postgres://postgres:postgres@db:5432/portsdb?search_path=ports_schema",
   "PortsFilePath": "ports.json"
 }
