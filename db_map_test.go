@@ -19,7 +19,7 @@ func Test_InmemoryDB(t *testing.T) {
 	}
 	portToSave2 := &Port{
 		Name:   "2",
-		Unlocs: []string{"1", "2"},
+		Unlocs: []string{"2", "1"}, // unordered
 	}
 	db.UpsertPort(ctx, "1", portToSave)
 	storedPort := db.FindPort(ctx, "1")

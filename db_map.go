@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"sort"
 	"sync"
 )
 
@@ -54,6 +55,7 @@ func (db *InmemoryDb) UpsertPort(_ context.Context, portUnloc string, port *Port
 		}
 		db.portsList = newPortsList
 	}
+	sort.Strings(port.Unlocs)
 	// append the port to ports list
 	db.portsList = append(db.portsList, port)
 	// add all port's unlocs
