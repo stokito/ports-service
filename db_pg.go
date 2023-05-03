@@ -11,9 +11,13 @@ import (
 
 // language=PostgreSQL
 var sqlUpsertPort = `
-INSERT INTO ports (
-unlocs, port, ids)
+INSERT INTO ports (unlocs, port, ids)
 VALUES ($1, $2, $3)
+`
+
+// language=PostgreSQL
+var sqlDeletePort = `
+DELETE FROM ports WHERE $1 = ANY(ids)
 `
 
 // language=PostgreSQL
@@ -54,17 +58,20 @@ func (db *PostgresDb) Close() {
 	}
 }
 
-func (db *PostgresDb) UpsertPort(ctx context.Context, newUnloc string, port *Port) {
+// UpsertPort Insert or update Port.
+// Note: it's not CTE atomic so don't use concurrently
+func (db *PostgresDb) UpsertPort(ctx context.Context, portUnloc string, port *Port) {
+	db.RemovePort(ctx, portUnloc)
 	sort.Strings(port.Unlocs)
 	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,
-		newUnloc, port, port.Unlocs)
+		portUnloc, port, port.Unlocs)
 	if sqlErr != nil {
 		log.Printf("WARN Fail to upsert port %v\n", sqlErr)
 	}
 }
 
-func (db *PostgresDb) FindPort(ctx context.Context, newUnloc string) *Port {
-	rows, err := db.pool.Query(ctx, sqlGetPort, newUnloc)
+func (db *PostgresDb) FindPort(ctx context.Context, portUnloc string) *Port {
+	rows, err := db.pool.Query(ctx, sqlGetPort, portUnloc)
 	if err != nil {
 		log.Printf("ERR GetAll error: %s\n", err)
 		return nil
@@ -104,6 +111,7 @@ func (db *PostgresDb) scanRow(rows pgx.Rows) *Port {
 		log.Printf("ERR scan error: %s\n", scanErr)
 		return nil
 	}
+	// the port with all fields is stored as is into a column so we need to unmarshal it
 	port := &Port{}
 	jsonErr := json.Unmarshal([]byte(portJson), port)
 	if jsonErr != nil {
@@ -118,6 +126,14 @@ func (db *PostgresDb) RemoveAll() {
 	_, err := db.pool.Exec(ctx, "DELETE FROM ports")
 	if err != nil {
 		log.Printf("ERR GetAll error: %s\n", err)
+		return
+	}
+}
+
+func (db *PostgresDb) RemovePort(ctx context.Context, portUnloc string) {
+	_, err := db.pool.Exec(ctx, sqlDeletePort, portUnloc)
+	if err != nil {
+		log.Printf("ERR RemovePort error: %s\n", err)
 		return
 	}
 }
