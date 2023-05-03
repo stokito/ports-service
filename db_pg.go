@@ -33,7 +33,7 @@ func (db *PostgresDb) Connect(ctx context.Context) error {
 	}
 	pool, dbErr := pgxpool.ConnectConfig(ctx, poolConfig)
 	if dbErr != nil {
-		return err
+		return dbErr
 	}
 	db.pool = pool
 	log.Printf("INFO Connected to database\n")
@@ -41,7 +41,7 @@ func (db *PostgresDb) Connect(ctx context.Context) error {
 }
 
 func (db *PostgresDb) Close() {
-	if db != nil {
+	if db.pool != nil {
 		db.pool.Close()
 		db.pool = nil
 		log.Printf("INFO DB disconnected\n")
