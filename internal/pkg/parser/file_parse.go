@@ -1,9 +1,11 @@
-package pkg
+package parser
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
+	. "github.com/stokito/ports-service/internal/pkg/db"
+	. "github.com/stokito/ports-service/internal/pkg/domain"
 	"io"
 	"log"
 	"os"

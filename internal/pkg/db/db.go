@@ -1,8 +1,9 @@
-package pkg
+package db
 
 import (
 	"context"
 	"errors"
+	. "github.com/stokito/ports-service/internal/pkg/domain"
 	"strings"
 )
 

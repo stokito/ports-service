@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	. "github.com/stokito/ports-service/internal/pkg"
+	. "github.com/stokito/ports-service/internal/pkg/db"
+	. "github.com/stokito/ports-service/internal/pkg/parser"
 	"log"
 	"os"
 )

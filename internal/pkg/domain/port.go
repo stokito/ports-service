@@ -1,4 +1,4 @@
-package pkg
+package domain
 
 type Port struct {
 	Name        string    `json:"name"`

@@ -1,7 +1,8 @@
-package pkg
+package db
 
 import (
 	"context"
+	. "github.com/stokito/ports-service/internal/pkg/domain"
 	"log"
 	"sort"
 	"sync"

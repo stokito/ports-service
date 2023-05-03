@@ -1,15 +1,21 @@
-package pkg
+package db
 
 import (
 	"context"
+	. "github.com/stokito/ports-service/internal/pkg/domain"
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
-func Test_InmemoryDB(t *testing.T) {
+func Test_PostgresDb(t *testing.T) {
 	ctx := context.Background()
-	db := NewInmemoryDb()
-	_ = db.Connect(ctx)
+	db := NewPostgresDb(os.Getenv("DATABASE_URL"))
+	err := db.Connect(ctx)
+	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
 	defer db.Close()
 	db.RemoveAll()
 	defer db.RemoveAll()
@@ -19,7 +25,7 @@ func Test_InmemoryDB(t *testing.T) {
 	}
 	portToSave2 := &Port{
 		Name:   "2",
-		Unlocs: []string{"2", "1"}, // unordered
+		Unlocs: []string{"1", "2"},
 	}
 	db.UpsertPort(ctx, "1", portToSave)
 	storedPort := db.FindPort(ctx, "1")

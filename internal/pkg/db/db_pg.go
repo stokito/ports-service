@@ -1,10 +1,11 @@
-package pkg
+package db
 
 import (
 	"context"
 	"encoding/json"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+	. "github.com/stokito/ports-service/internal/pkg/domain"
 	"log"
 	"sort"
 )
@@ -64,6 +65,10 @@ func (db *PostgresDb) Close() {
 // UpsertPort Insert or update Port.
 // Note: it's not CTE atomic so don't use concurrently
 func (db *PostgresDb) UpsertPort(ctx context.Context, portUnloc string, port *Port) {
+	// if no specific portUnloc then take any from a port.Unloc
+	if portUnloc == "" {
+		portUnloc = port.Unlocs[0]
+	}
 	db.RemovePort(ctx, portUnloc)
 	sort.Strings(port.Unlocs)
 	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,

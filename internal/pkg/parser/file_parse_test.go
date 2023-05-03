@@ -1,7 +1,8 @@
-package pkg
+package parser
 
 import (
 	"context"
+	. "github.com/stokito/ports-service/internal/pkg/db"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
