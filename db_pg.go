@@ -11,20 +11,23 @@ import (
 
 // language=PostgreSQL
 var sqlUpsertPort = `
-INSERT INTO ports (unlocs, port, ids)
-VALUES ($1, $2, $3)
+INSERT INTO ports (unlocs, port)
+VALUES ($1, $2)
 `
 
 // language=PostgreSQL
 var sqlDeletePort = `
-DELETE FROM ports WHERE $1 = ANY(ids)
+DELETE FROM ports WHERE $1 = ANY(unlocs)
 `
 
 // language=PostgreSQL
+var sqlGetAll = "SELECT port FROM ports"
+
+// language=PostgreSQL
 var sqlGetPort = `
-SELECT unlocs, port, ids
+SELECT port
 FROM ports 
-WHERE $1 = ANY(ids)
+WHERE $1 = ANY(unlocs)
 `
 
 type PostgresDb struct {
@@ -64,7 +67,7 @@ func (db *PostgresDb) UpsertPort(ctx context.Context, portUnloc string, port *Po
 	db.RemovePort(ctx, portUnloc)
 	sort.Strings(port.Unlocs)
 	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,
-		portUnloc, port, port.Unlocs)
+		port.Unlocs, port)
 	if sqlErr != nil {
 		log.Printf("WARN Fail to upsert port %v\n", sqlErr)
 	}
@@ -85,7 +88,7 @@ func (db *PostgresDb) FindPort(ctx context.Context, portUnloc string) *Port {
 }
 
 func (db *PostgresDb) GetAll(ctx context.Context) []*Port {
-	rows, err := db.pool.Query(ctx, "SELECT unlocs, port, ids FROM ports")
+	rows, err := db.pool.Query(ctx, sqlGetAll)
 	if err != nil {
 		log.Printf("ERR GetAll error: %s\n", err)
 		return []*Port{}
@@ -103,10 +106,8 @@ func (db *PostgresDb) GetAll(ctx context.Context) []*Port {
 }
 
 func (db *PostgresDb) scanRow(rows pgx.Rows) *Port {
-	var unlocs string
 	var portJson string
-	var ids []string
-	scanErr := rows.Scan(&unlocs, &portJson, &ids)
+	scanErr := rows.Scan(&portJson)
 	if scanErr != nil {
 		log.Printf("ERR scan error: %s\n", scanErr)
 		return nil
