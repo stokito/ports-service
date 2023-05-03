@@ -44,10 +44,17 @@ func (db *InmemoryDb) UpsertPort(_ context.Context, portUnloc string, port *Port
 		for _, oldUnloc := range oldPort.Unlocs {
 			delete(db.ports, oldUnloc)
 		}
-	} else {
-		// append the port to ports list
-		db.portsList = append(db.portsList, port)
+		// remove the oldPort from portsList
+		newPortsList := make([]*Port, 0, len(db.portsList))
+		for _, p := range db.portsList {
+			if p != oldPort {
+				newPortsList = append(newPortsList, p)
+			}
+		}
+		db.portsList = newPortsList
 	}
+	// append the port to ports list
+	db.portsList = append(db.portsList, port)
 	// add all port's unlocs
 	for _, newUnloc := range port.Unlocs {
 		db.ports[newUnloc] = port

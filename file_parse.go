@@ -44,6 +44,7 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) (uint64, error) {
 }
 
 type Port struct {
+	Name   string
 	Unlocs []string `json:"unlocs"`
 }
 
