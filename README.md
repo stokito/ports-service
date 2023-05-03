@@ -1,4 +1,35 @@
 # Ports Service
+A Port domain API service to store and retrieve ports.
+
+Each port looks in JSON like: 
+```json
+{
+  "name": "Djibouti",
+  "city": "Djibouti",
+  "country": "Djibouti",
+  "alias": [],
+  "regions": [],
+  "coordinates": [
+    43.1456475,
+    11.5720765
+  ],
+  "province": "Djibouti",
+  "timezone": "Africa/Djibouti",
+  "unlocs": [
+    "DJJIB",
+    "DJPOD"
+  ],
+  "code": "77701"
+}
+```
+
+So the port may have many `"unlocs": ["DJJIB", "DJPOD"]` and we need a deduplication by the unloc code.
+
+The repo contains:
+* ports-service - a REST-like API service to save and get a port.
+* ports-import tool to load ports from JSON file e.g. `ports.json`.
+
+They both can be configured with a config.json file e.g. DB settings, API listen address etc.
 
 ## Setup
 The service use PostgreSQL with JSON columns support.
@@ -10,4 +41,29 @@ Use `docker-compose up` and `docker-compose down` to start and stop the applicat
 
 ## Local development
 You can override config options like DB URL in the `config.local.json`.
+For Goland run configuration were added.
 The `requests.http` file contains samples of API requests.
+
+## Build and Usage
+You can build manually with:
+
+    go build  -o ports-import ./cmd/import
+    go build  -o ports-service ./cmd/service
+
+
+## Technical test
+
+- Given a file with ports data (ports.json), write a port domain service that either creates a new record in a database, or updates the existing one (Hint: no need for delete or other methods).
+- The file is of unknown size, it can contain several millions of records, you will not be able to read the entire file at once.
+- The service has limited resources available (e.g. 200MB ram).
+- The end result should be a database containing the ports, representing the latest version found in the JSON. (Hint: use an in memory database to save time and avoid complexity).
+- A Dockerfile should be used to contain and run the service (Hint: extra points for avoiding compilation in docker).
+- Provide at least one example per test type that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing.
+- Your readme.md should explain how to run your program and test it.
+- The service should handle certain signals correctly (e.g. a TERM or KILL signal should result in a graceful shutdown).
+
+### Bonus points
+
+- Address security concerns for Docker
+- Database in docker container
+- Docker-compose file
