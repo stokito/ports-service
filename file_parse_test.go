@@ -54,7 +54,7 @@ var testPortsJson = `
 func Test_ParsePortsStream(t *testing.T) {
 	ctx := context.Background()
 	portsFile := strings.NewReader(testPortsJson)
-	res := make(chan ParseStream, 0)
+	res := make(chan ParseStream, 10)
 
 	go ParsePortsStream(ctx, portsFile, res)
 	r1 := <-res
@@ -63,4 +63,9 @@ func Test_ParsePortsStream(t *testing.T) {
 	assert.Equal(t, []string{"DJPOD", "DJJIB"}, r2.Value.Unlocs)
 	r3 := <-res
 	assert.NotNil(t, r3.Error)
+}
+
+func Test_ParsePortsFile(t *testing.T) {
+	ctx := context.Background()
+	ParsePortsFile(ctx, "ports.json")
 }
