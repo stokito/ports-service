@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 )
 
@@ -26,9 +27,10 @@ func main() {
 		return
 	}
 	defer portsDb.Close()
-	err := ParsePortsFile(ctx, "ports.json")
+	totalProcessed, err := ParsePortsFile(ctx, "ports.json")
 	if err != nil {
 		log.Printf("CRIT Failed to parse ports file: %s\n", err)
 		return
 	}
+	fmt.Println("Total Processed ", totalProcessed)
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,10 +11,10 @@ import (
 
 var ErrorBadUnloc = errors.New("bad Unloc")
 
-func ParsePortsFile(ctx context.Context, portsFilePath string) error {
+func ParsePortsFile(ctx context.Context, portsFilePath string) (uint64, error) {
 	portsFile, err := os.Open(portsFilePath)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer portsFile.Close()
 
@@ -41,8 +40,7 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) error {
 		portsDb.UpsertPort(ctx, got.Unloc, got.Value)
 		totalProcessed++
 	}
-	fmt.Println("Total Processed ", totalProcessed)
-	return nil
+	return totalProcessed, nil
 }
 
 type Port struct {
