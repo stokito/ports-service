@@ -9,14 +9,15 @@ import (
 )
 
 type PortsServiceConf struct {
-	DatabaseUrl string
+	DatabaseUrl   string
+	PortsFilePath string
 }
 
 var conf *PortsServiceConf
 
 func main() {
 	loadConfig()
-	log.Printf("Start Ports Service\n")
+	log.Printf("Start Ports Import\n")
 	ctx := context.Background()
 	dbInitErr := InitDb()
 	if dbInitErr != nil {
@@ -29,7 +30,8 @@ func main() {
 		return
 	}
 	defer portsDb.Close()
-	totalProcessed, err := ParsePortsFile(ctx, "ports.json")
+	log.Printf("INFO Importing %s\n", conf.PortsFilePath)
+	totalProcessed, err := ParsePortsFile(ctx, conf.PortsFilePath)
 	if err != nil {
 		log.Printf("CRIT Failed to parse ports file: %s\n", err)
 		return
