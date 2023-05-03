@@ -17,7 +17,8 @@ type InmemoryDb struct {
 
 func NewInmemoryDb() *InmemoryDb {
 	inmemDb := &InmemoryDb{
-		ports: make(map[string]*Port, 2000),
+		ports:     make(map[string]*Port, 2000),
+		portsList: []*Port{},
 	}
 	return inmemDb
 }
@@ -71,4 +72,8 @@ func (db *InmemoryDb) FindPort(_ context.Context, portUnloc string) *Port {
 
 func (db *InmemoryDb) GetAll(ctx context.Context) []*Port {
 	return db.portsList
+}
+
+func (db *InmemoryDb) RemoveAll() {
+	db.portsList = []*Port{}
 }

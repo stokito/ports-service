@@ -15,6 +15,7 @@ type PortsDb interface {
 	FindPort(ctx context.Context, portUnloc string) *Port
 	// GetAll Return a list of all stored ports. Their order is not guaranteed
 	GetAll(ctx context.Context) []*Port
+	RemoveAll()
 }
 
 var portsDb PortsDb
