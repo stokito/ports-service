@@ -25,20 +25,25 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) (uint64, error) {
 
 	go ParsePortsStream(ctx, portsFile, res)
 	// Read from results stream...
-	for got := range res {
+processing:
+	for {
 		select {
 		case <-ctx.Done():
-			break
-		}
-		if got.Error != nil {
-			if got.Error == io.EOF {
-				break
+			break processing
+		case got, ok := <-res:
+			if !ok {
+				break processing
 			}
-			log.Print(got.Error)
-			continue
+			if got.Error != nil {
+				log.Printf("ERR on process: %s\n", got.Error)
+				continue
+			}
+			if got.Value == nil {
+				continue
+			}
+			portsDb.UpsertPort(ctx, got.Unloc, got.Value)
+			totalProcessed++
 		}
-		portsDb.UpsertPort(ctx, got.Unloc, got.Value)
-		totalProcessed++
 	}
 	return totalProcessed, nil
 }
