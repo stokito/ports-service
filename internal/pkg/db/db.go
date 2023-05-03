@@ -11,6 +11,7 @@ import (
 type PortsDb interface {
 	Connect(ctx context.Context) error
 	Close()
+	// UpsertPort insert or update a Port. The portUnloc may be empty then port.Unloc will be used
 	UpsertPort(ctx context.Context, portUnloc string, port *Port)
 	// FindPort retrieves a Port by the portUnloc.
 	FindPort(ctx context.Context, portUnloc string) *Port

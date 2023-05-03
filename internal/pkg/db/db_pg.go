@@ -67,6 +67,10 @@ func (db *PostgresDb) Close() {
 func (db *PostgresDb) UpsertPort(ctx context.Context, portUnloc string, port *Port) {
 	// if no specific portUnloc then take any from a port.Unloc
 	if portUnloc == "" {
+		if len(port.Unlocs) == 0 {
+			log.Printf("WARN Fail to upsert port: no any unloc\n")
+			return
+		}
 		portUnloc = port.Unlocs[0]
 	}
 	db.RemovePort(ctx, portUnloc)
@@ -74,7 +78,7 @@ func (db *PostgresDb) UpsertPort(ctx context.Context, portUnloc string, port *Po
 	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,
 		port.Unlocs, port)
 	if sqlErr != nil {
-		log.Printf("WARN Fail to upsert port %v\n", sqlErr)
+		log.Printf("WARN Fail to upsert port: %v\n", sqlErr)
 	}
 }
 
