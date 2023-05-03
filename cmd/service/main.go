@@ -26,12 +26,7 @@ func main() {
 	defer cancelFn()
 
 	conf := LoadConfig()
-	listenAddr := ":8080"
-	credentials := map[string]string{
-		"api": "secret",
-	}
-
-	apiServer := createApiServer(listenAddr, credentials)
+	apiServer := createApiServer(conf.ListenAddr, conf.Credentials)
 	err := InitDb(conf.DatabaseUrl)
 	if err != nil {
 		log.Fatalf("Unable to initialize DB\n")

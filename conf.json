@@ -1,4 +1,8 @@
 {
   "DatabaseUrl": "postgres://postgres:postgres@db:5432/portsdb?search_path=ports_schema",
-  "PortsFilePath": "ports.json"
+  "PortsFilePath": "ports.json",
+  "ListenAddr": ":8080",
+  "Credentials": {
+    "api": "secret"
+  }
 }

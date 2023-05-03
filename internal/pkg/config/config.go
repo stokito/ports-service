@@ -6,8 +6,12 @@ import (
 	"os"
 )
 
+// PortsServiceConf is loaded from conf.json
+// TODO The same config is used for import tool, needs for a split
 type PortsServiceConf struct {
 	DatabaseUrl   string
+	ListenAddr    string
+	Credentials   map[string]string
 	PortsFilePath string
 }
 
