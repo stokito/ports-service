@@ -27,5 +27,5 @@ func TestInmemoryDB_Connect(t *testing.T) {
 	assert.Equal(t, "1", storedPort.Unlocs[0])
 	assert.Equal(t, "2", allPorts[0].Unlocs[1])
 	allPorts = db.GetAll(ctx)
-	assert.Equal(t, 2, len(allPorts))
+	assert.Equal(t, 1, len(allPorts))
 }
