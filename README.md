@@ -31,6 +31,30 @@ The repo contains:
 
 They both can be configured with a config.json file e.g. DB settings, API listen address etc.
 
+## API
+Sample of API. Create/update a port with POST:
+```
+POST http://localhost:8080/api/v1/ports/
+Authorization: Basic api secret
+Content-Type: application/json
+
+{
+  "name": "Ajman",
+  "unlocs": [
+    "AEAJM"
+  ]
+}
+```
+
+Get/retrieve with GET:
+```
+GET http://localhost:8080/api/v1/ports/?unloc=AEAJM
+Authorization: Basic api secret
+```
+
+Currently, for the API only HTTP is supported so use a reverse proxy.
+You can configure a basic authorization for the API.
+
 ## Setup
 The service use PostgreSQL with JSON columns support.
 It's database can be initialized with `init.sql` file.
