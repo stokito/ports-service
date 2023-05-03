@@ -43,11 +43,6 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) (uint64, error) {
 	return totalProcessed, nil
 }
 
-type Port struct {
-	Name   string
-	Unlocs []string `json:"unlocs"`
-}
-
 // A ParseStream is used to stream back results.
 // Either Error or Value will be set on returned results.
 type ParseStream struct {
