@@ -10,8 +10,8 @@ import (
 type PortsDb interface {
 	Connect(ctx context.Context) error
 	Close()
-	UpsertPort(ctx context.Context, portUnlock string, port *Port)
-	FindPort(ctx context.Context, portUnlock string) *Port
+	UpsertPort(ctx context.Context, portUnloc string, port *Port)
+	FindPort(ctx context.Context, portUnloc string) *Port
 	GetAll(ctx context.Context) []*Port
 }
 

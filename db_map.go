@@ -9,6 +9,7 @@ import (
 // InmemoryDb is an implementation of PortsDb that stores to an in-memory map
 type InmemoryDb struct {
 	sync.RWMutex
+	// Map of unlocs to ports
 	ports map[string]*Port
 }
 
@@ -30,17 +31,17 @@ func (db *InmemoryDb) Close() {
 }
 
 // UpsertPort stores a Port to memory.
-func (db *InmemoryDb) UpsertPort(_ context.Context, portUnlock string, port *Port) {
+func (db *InmemoryDb) UpsertPort(_ context.Context, portUnloc string, port *Port) {
 	db.Lock()
 	defer db.Unlock()
-	db.ports[portUnlock] = port
+	db.ports[portUnloc] = port
 }
 
-// FindPort retrieves a Port from memory by the portUnlock.
-func (db *InmemoryDb) FindPort(_ context.Context, portUnlock string) *Port {
+// FindPort retrieves a Port from memory by the portUnloc.
+func (db *InmemoryDb) FindPort(_ context.Context, portUnloc string) *Port {
 	db.RLock()
 	defer db.RUnlock()
-	p := db.ports[portUnlock]
+	p := db.ports[portUnloc]
 	return p
 }
 

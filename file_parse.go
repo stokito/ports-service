@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-var ErrorBadUnlock = errors.New("bad Unlock")
+var ErrorBadUnloc = errors.New("bad Unloc")
 
 func ParsePortsFile(ctx context.Context, portsFilePath string) error {
 	portsFile, err := os.Open(portsFilePath)
@@ -38,7 +38,7 @@ func ParsePortsFile(ctx context.Context, portsFilePath string) error {
 			log.Print(got.Error)
 			continue
 		}
-		portsDb.UpsertPort(ctx, got.Unlock, got.Value)
+		portsDb.UpsertPort(ctx, got.Unloc, got.Value)
 		totalProcessed++
 	}
 	fmt.Println("Total Processed ", totalProcessed)
@@ -52,10 +52,10 @@ type Port struct {
 // A ParseStream is used to stream back results.
 // Either Error or Value will be set on returned results.
 type ParseStream struct {
-	// Unlock code, can be empty on parsing error
-	Unlock string
-	Value  *Port
-	Error  error
+	// Unloc code, can be empty on parsing error
+	Unloc string
+	Value *Port
+	Error error
 }
 
 func ParsePortsStream(ctx context.Context, portsFile io.Reader, res chan<- ParseStream) {
@@ -64,14 +64,14 @@ func ParsePortsStream(ctx context.Context, portsFile io.Reader, res chan<- Parse
 	jsonDec := json.NewDecoder(portsFile)
 	_, _ = jsonDec.Token() // skip first {
 	for jsonDec.More() {
-		unlockToken, err := jsonDec.Token()
+		unlocToken, err := jsonDec.Token()
 		if err != nil {
 			res <- ParseStream{Error: err}
 			continue
 		}
-		unlock, ok := unlockToken.(string)
+		unloc, ok := unlocToken.(string)
 		if !ok {
-			res <- ParseStream{Error: ErrorBadUnlock}
+			res <- ParseStream{Error: ErrorBadUnloc}
 			continue
 		}
 		//TODO Get the raw JSON of the Port instead of mapping to the struct.
@@ -80,9 +80,9 @@ func ParsePortsStream(ctx context.Context, portsFile io.Reader, res chan<- Parse
 		port := &Port{}
 		err = jsonDec.Decode(port)
 		if err != nil {
-			res <- ParseStream{Unlock: unlock, Error: err}
+			res <- ParseStream{Unloc: unloc, Error: err}
 			continue
 		}
-		res <- ParseStream{Unlock: unlock, Value: port}
+		res <- ParseStream{Unloc: unloc, Value: port}
 	}
 }

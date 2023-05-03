@@ -67,5 +67,8 @@ func Test_ParsePortsStream(t *testing.T) {
 
 func Test_ParsePortsFile(t *testing.T) {
 	ctx := context.Background()
+	portsDb = NewInmemoryDb()
 	ParsePortsFile(ctx, "ports.json")
+	p1 := portsDb.FindPort(ctx, "DJJIB")
+	assert.Equal(t, []string{"DJJIB", "DJPOD"}, p1.Unlocs)
 }

@@ -8,7 +8,7 @@ import (
 
 // language=PostgreSQL
 var sqlUpsertPort = `INSERT INTO ports (
-	unlocks, port)
+	unlocs, port)
 	VALUES ($1, $2)
 `
 
@@ -23,8 +23,8 @@ func NewPostgresDb(databaseUrl string) *PostgresDb {
 
 //Connect(ctx context.Context) error
 //Close(ctx context.Context)
-//UpsertPort(ctx context.Context, portUnlock string, port *Port) error
-//FindPort(ctx context.Context, portUnlock string) *Port
+//UpsertPort(ctx context.Context, portUnloc string, port *Port) error
+//FindPort(ctx context.Context, portUnloc string) *Port
 
 func (db *PostgresDb) Connect(ctx context.Context) error {
 	poolConfig, err := pgxpool.ParseConfig(db.databaseUrl)
@@ -48,15 +48,15 @@ func (db *PostgresDb) Close() {
 	}
 }
 
-func (db *PostgresDb) UpsertPort(ctx context.Context, portUnlock string, port *Port) {
+func (db *PostgresDb) UpsertPort(ctx context.Context, newUnloc string, port *Port) {
 	_, sqlErr := db.pool.Exec(ctx, sqlUpsertPort,
-		portUnlock, port)
+		newUnloc, port)
 	if sqlErr != nil {
 		log.Printf("WARN Fail to upsert port %v\n", sqlErr)
 	}
 }
 
-func (db *PostgresDb) FindPort(ctx context.Context, portUnlock string) *Port {
+func (db *PostgresDb) FindPort(ctx context.Context, newUnloc string) *Port {
 	//TODO
 	return nil
 }
