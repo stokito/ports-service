@@ -32,3 +32,8 @@ Content-Type: application/json
   "code": "52000"
 }
 
+> {%
+	client.test("Status", function () {
+		client.assert(response.status === 204, response.status);
+	});
+%}
