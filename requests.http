@@ -1,0 +1,34 @@
+###
+GET http://localhost:8080/api/v1/ports/?unloc=AEAJM
+Authorization: Basic api secret
+
+
+> {%
+	client.test("Status", function () {
+		client.assert(response.status === 200, response.status);
+	});
+%}
+
+###
+POST http://localhost:8080/api/v1/ports/
+Authorization: Basic api secret
+Content-Type: application/json
+
+{
+  "name": "Ajman",
+  "city": "Ajman",
+  "country": "United Arab Emirates",
+  "alias": [],
+  "regions": [],
+  "coordinates": [
+    55.5136433,
+    25.4052165
+  ],
+  "province": "Ajman",
+  "timezone": "Asia/Dubai",
+  "unlocs": [
+    "AEAJM"
+  ],
+  "code": "52000"
+}
+
