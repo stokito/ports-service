@@ -75,6 +75,14 @@ Default configuration is:
 }
 ```
 
+* `DatabaseUrl`: can be `mem://` for in memory or a full PostgreSQL connection string.
+* `PortsFilePath`: used only by importer to specify a ports.json file path.
+* `ListenAddr`: bind address for HTTP API 
+* `Credentials`: a username/password pairs for API's basic auth. 
+
+Note: passwords aren't hashed, autogenerate them.
+Also remove the default password on a production.
+
 ## Local development
 You can override config options like DB URL in the `config.local.json`.
 For Goland run configuration were added.
