@@ -89,17 +89,18 @@ For Goland run configuration were added.
 The `requests.http` file contains samples of API requests.
 
 ## Build and Usage
-You can build manually with:
 
-    go build  -o ports-import ./cmd/import
-    go build  -o ports-service ./cmd/service
-
-Or you can run `make build`.
+Or you can run `make build` and then `docker-compose up`. The docker compose will build an image.
 The default target for make is to build a docker image `ports-service:latest`.
 The image also contain the importer in `/opt/posrts-importer` so you can execute it in interactive mode.
 
 To run a linter execute `make run-lint`.
 You may need to install a linter `sudo snap install golangci-lint`.
+
+You can build manually with:
+
+    go build  -o ports-import ./cmd/import
+    go build  -o ports-service ./cmd/service
 
 ## Technical test
 

@@ -14,8 +14,9 @@ services:
 #      - db:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   ports-service:
+    build: .
     depends_on: [db]
-    image: ports-service:latest
+#    image: ports-service:latest
     ports:
       - '8080:8080'
 volumes:
