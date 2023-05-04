@@ -63,6 +63,18 @@ The provided docker-compose uses an official [PostgreSQL image](https://hub.dock
 
 Use `docker-compose up` and `docker-compose down` to start and stop the application.
 
+Default configuration is:
+```json
+{
+  "DatabaseUrl": "postgres://postgres:postgres@db:5432/portsdb?search_path=ports_schema",
+  "PortsFilePath": "ports.json",
+  "ListenAddr": ":8080",
+  "Credentials": {
+    "api": "secret"
+  }
+}
+```
+
 ## Local development
 You can override config options like DB URL in the `config.local.json`.
 For Goland run configuration were added.
@@ -74,6 +86,9 @@ You can build manually with:
     go build  -o ports-import ./cmd/import
     go build  -o ports-service ./cmd/service
 
+Or you can run `make build`.
+To run a linter execute `make run-lint`.
+You may need to install a linter `sudo snap install golangci-lint`.
 
 ## Technical test
 
