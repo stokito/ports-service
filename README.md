@@ -87,6 +87,9 @@ You can build manually with:
     go build  -o ports-service ./cmd/service
 
 Or you can run `make build`.
+The default target for make is to build a docker image `ports-service:latest`.
+The image also contain the importer in `/opt/posrts-importer` so you can execute it in interactive mode.
+
 To run a linter execute `make run-lint`.
 You may need to install a linter `sudo snap install golangci-lint`.
 

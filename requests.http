@@ -1,4 +1,4 @@
-###
+### GET port by unloc
 GET http://localhost:8080/api/v1/ports/?unloc=AEAJM
 Authorization: Basic api secret
 
@@ -9,7 +9,7 @@ Authorization: Basic api secret
 	});
 %}
 
-###
+### POST save port
 POST http://localhost:8080/api/v1/ports/
 Authorization: Basic api secret
 Content-Type: application/json
