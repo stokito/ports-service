@@ -50,7 +50,8 @@ var testPortsJson = `
   "ERR": {
     "name": "ERROR Unclosed quote
   }
-}`
+}
+`
 
 func Test_ParsePortsStream(t *testing.T) {
 	ctx := context.Background()
@@ -74,6 +75,6 @@ func Test_ParsePortsFile(t *testing.T) {
 	p1 := PortsDbConn.FindPort(ctx, "DJJIB")
 	assert.Equal(t, []string{"DJJIB", "DJPOD"}, p1.Unlocs)
 	allPorts := PortsDbConn.GetAll(ctx)
-	assert.Equal(t, uint64(1632), totalProcessed)
-	assert.Equal(t, 1624, len(allPorts))
+	assert.Equal(t, uint64(2), totalProcessed)
+	assert.Equal(t, 1, len(allPorts))
 }

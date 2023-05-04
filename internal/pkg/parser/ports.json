@@ -1,0 +1,38 @@
+{
+  "DJJIB": {
+    "name": "Djibouti",
+    "city": "Djibouti",
+    "country": "Djibouti",
+    "alias": [],
+    "regions": [],
+    "coordinates": [
+      43.1456475,
+      11.5720765
+    ],
+    "province": "Djibouti",
+    "timezone": "Africa/Djibouti",
+    "unlocs": [
+      "DJJIB",
+      "DJPOD"
+    ],
+    "code": "77701"
+  },
+  "DJPOD": {
+    "name": "Djibouti",
+    "city": "Djibouti",
+    "country": "Djibouti",
+    "alias": [],
+    "regions": [],
+    "coordinates": [
+      43.1456475,
+      11.5720765
+    ],
+    "province": "Djibouti",
+    "timezone": "Africa/Djibouti",
+    "unlocs": [
+      "DJPOD",
+      "DJJIB"
+    ],
+    "code": "77701"
+  }
+}
