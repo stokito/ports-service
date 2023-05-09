@@ -21,6 +21,10 @@ type ErrorResp struct {
 	Message string
 }
 
+// Starts a REST API service
+// The service is intended for an internal use and uses a Basic Authorization.
+// Only standard golang http server and mux is used for simplicity.
+// Additional endpoints for profiling are exposed. They also requires the Basic Auth.
 func main() {
 	ctx, cancelFn := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancelFn()
@@ -29,7 +33,7 @@ func main() {
 	apiServer := createApiServer(conf.ListenAddr, conf.Credentials)
 	err := InitDb(conf.DatabaseUrl)
 	if err != nil {
-		log.Fatalf("Unable to initialize DB\n")
+		log.Fatalf("Unable to initialize DB: %s\n", err)
 		return
 	}
 	dbErr := PortsDbConn.Connect(ctx)
@@ -85,6 +89,7 @@ func handlePortsRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetPortRequest(w http.ResponseWriter, r *http.Request) {
+	//TODO get the unloc code from a path instead of a query param
 	portUnloc := r.URL.Query().Get("unloc")
 	port := PortsDbConn.FindPort(context.Background(), portUnloc)
 	if port == nil {
