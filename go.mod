@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
+	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.8.2
 )
 

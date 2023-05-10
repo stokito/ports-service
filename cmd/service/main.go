@@ -18,8 +18,11 @@ func main() {
 	ctx, cancelFn := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancelFn()
 
-	conf := LoadConfig()
-	err := InitDb(conf.DatabaseUrl)
+	conf, err := LoadConfig()
+	if err != nil {
+		log.Fatalf("CRIT Unable to load config: %s\n", err)
+	}
+	err = InitDb(conf.DatabaseUrl)
 	if err != nil {
 		log.Fatalf("Unable to initialize DB: %s\n", err)
 		return

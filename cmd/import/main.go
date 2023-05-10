@@ -9,7 +9,10 @@ import (
 )
 
 func main() {
-	conf := LoadConfig()
+	conf, err := LoadConfig()
+	if err != nil {
+		log.Fatalf("CRIT Unable to load config: %s\n", err)
+	}
 	log.Printf("INFO Start Ports Import\n")
 	ctx := context.Background()
 	dbInitErr := InitDb(conf.DatabaseUrl)
