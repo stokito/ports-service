@@ -1,4 +1,4 @@
-package basicauth
+package api
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"runtime/debug"
 )
 
+// RecoveryHandlerWrapper Middleware to catch and log panics
 type RecoveryHandlerWrapper struct {
 	Handler http.Handler
 }
